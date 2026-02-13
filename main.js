@@ -11,19 +11,16 @@ class MenuScene extends Phaser.Scene {
     const w = this.scale.width;
     const h = this.scale.height;
 
-    // Fundo
     this.add.image(w / 2, h / 2, "background")
       .setDisplaySize(w, h)
       .setDepth(-1);
 
-    // Título
     this.add.text(w / 2, h / 2 - 150, "SUPER DS", {
       fontSize: "80px",
       color: "#ffffff",
       fontStyle: "bold"
     }).setOrigin(0.5);
 
-    // Botão Jogar
     const playBtn = this.add.rectangle(w / 2, h / 2, 300, 70, 0x2c5aa0)
       .setInteractive({ useHandCursor: true });
 
@@ -58,7 +55,7 @@ class MenuScene extends Phaser.Scene {
     exitBtn.on("pointerout", () => exitBtn.setFillStyle(0xaa2c2c));
 
     exitBtn.on("pointerdown", () => {
-      window.close(); // funciona se estiver rodando local
+      window.close(); 
     });
   }
 }
@@ -140,7 +137,6 @@ const LEVELS = [
       [1600, -40, 20, 20],
 
 
-      // spawn
     ],
 
     collectible: { x: 320, yOffset: -320 },
@@ -318,7 +314,6 @@ function create(data) {
       repeat: loop
     });
   };
-  // Número de frames por spritesheet (cada asset tem quantidade diferente)
   makeAnim("idle", "male_hero-idle", 8, -1, 5);
   makeAnim("run", "male_hero-run", 14, -1, 9);
   makeAnim("run_turn", "male_hero-run_turn", 12, 0, 3);
@@ -371,7 +366,6 @@ function create(data) {
   let groundSegments = [];
 
   // ===== FASE 1 =====
-  // Apenas lado esquerdo (igual estava antes)
   if (this.level === 1) {
     groundSegments.push({
       x: 0,
@@ -380,7 +374,6 @@ function create(data) {
   }
 
   // ===== FASE 2 =====
-  // Lado esquerdo + lado direito com buraco
   if (this.level === 2) {
 
     // esquerdo
@@ -430,7 +423,7 @@ function create(data) {
     groundBodies.push(ground);
   });
 
-  // Plataformas flutuantes (3 retângulos com grama)
+  // Plataformas flutuantes 
   const platforms = [];
   const addPlatform = (centerX, centerY, w, h) => {
     const plat = this.add.rectangle(centerX, centerY, w, h, 0, 0);
@@ -455,9 +448,6 @@ function create(data) {
   };
   levelData.platforms.forEach(p => addPlatform(p[0], groundY + p[1], p[2], p[3]));
 
-  // Plataforma pequena no canto direito (meta) (base da meta) — afastada da borda para não cortar
-
-
   // Coletável: moeda animada 4 frames (40x10), escala 2
   const col = levelData.collectible;
   const collectible = this.add.sprite(col.x, groundY + col.yOffset, "coin").setDepth(1).setScale(2);
@@ -468,19 +458,17 @@ function create(data) {
   if (collectible.body.setSensor) collectible.body.setSensor(true);
   else collectible.body.isSensor = true;
 
-  // Meta: bandeira animada 4 frames (100x32 → 25x32 por frame), escala 1 (como a moeda)
+  // Meta: bandeira animada 4 frames (100x32 → 25x32 por frame), escala 1 
   // ================= META DINÂMICA =================
   const goalData = levelData.goal;
 
   let goalX;
   let goalY;
 
-  // Se existir goal definido no LEVELS, usa ele
   if (goalData) {
     goalX = goalData.x;
     goalY = groundY + goalData.yOffset;
   } else {
-    // fallback (fase 1)
     goalX = config.width - 200;
     goalY = groundY - 50;
   }
@@ -525,8 +513,7 @@ function create(data) {
   goalZone.body.updateFromGameObject();
   goalZone.body.isSensor = true;
 
-
-  // Player: origem (0.5, 1) = pés no (x,y); spawn com pés em cima do chão
+  // Player: origem (0.5, 1) = pés no (x,y); 
   let collected = false;
   const PLAYER_SCALE = 1;
   const spawnX = levelData.spawnRight ? 1750 : 120;
@@ -544,7 +531,6 @@ function create(data) {
       this.physics.pause();
       showVictoryPopup(this, this.level);
     } else {
-      // Objetivo obrigatório: aviso se chegar na meta sem a moeda
       const msg = this.add.text(goalX, goalY - 60, "Pegue a moeda primeiro!", {
         fontSize: 24, color: "#ffaa00"
       }).setOrigin(0.5).setDepth(100);
@@ -555,7 +541,7 @@ function create(data) {
   cursors = this.input.keyboard.createCursorKeys();
   this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
-  // UI de vidas (fixa na tela)
+  // UI de vidas 
   this.livesText = this.add.text(24, 24, "Vidas: " + this.lives, {
     fontSize: 28, color: "#ffffff"
   }).setDepth(500).setScrollFactor(0);
@@ -576,7 +562,6 @@ function create(data) {
       spike.setOrigin(0.5, 0.5);   // base do espinho no chão
       spike.refreshBody();
 
-      // 👇 HITBOX MENOR (opcional mas recomendado)
       spike.body.setSize(60, 12);
       spike.body.setOffset(2, 4);
     }
@@ -624,29 +609,29 @@ function create(data) {
   this.cameras.main.setDeadzone(120, 80);
   this.cameras.main.setBounds(0, 0, config.width, config.height);
 
-  // ================= BOTÃO DEV - IR PARA FASE 2 =================
-  const devButton = this.add.rectangle(1700, 40, 160, 40, 0x8e44ad)
-    .setScrollFactor(0)
-    .setDepth(1000)
-    .setInteractive({ useHandCursor: true });
+  // // ================= BOTÃO DEV - IR PARA FASE 2 =================
+  // const devButton = this.add.rectangle(1700, 40, 160, 40, 0x8e44ad)
+  //   .setScrollFactor(0)
+  //   .setDepth(1000)
+  //   .setInteractive({ useHandCursor: true });
 
-  this.add.text(1700, 40, "DEV: Fase 2", {
-    fontSize: 18,
-    color: "#ffffff"
-  })
-    .setOrigin(0.5)
-    .setScrollFactor(0)
-    .setDepth(1001);
+  // this.add.text(1700, 40, "DEV: Fase 2", {
+  //   fontSize: 18,
+  //   color: "#ffffff"
+  // })
+  //   .setOrigin(0.5)
+  //   .setScrollFactor(0)
+  //   .setDepth(1001);
 
-  devButton.on("pointerover", () => devButton.setFillStyle(0xa569bd));
-  devButton.on("pointerout", () => devButton.setFillStyle(0x8e44ad));
+  // devButton.on("pointerover", () => devButton.setFillStyle(0xa569bd));
+  // devButton.on("pointerout", () => devButton.setFillStyle(0x8e44ad));
 
-  devButton.on("pointerdown", () => {
-    this.scene.restart({
-      level: 2,
-      lives: 3
-    });
-  });
+  // devButton.on("pointerdown", () => {
+  //   this.scene.restart({
+  //     level: 2,
+  //     lives: 3
+  //   });
+  // });
 
 
 }
@@ -655,13 +640,13 @@ function create(data) {
 function update(time, delta) {
   if (this.victoryTriggered || this.gameOverTriggered) return;
 
-  // Reset da fase com R (reinicia com 3 vidas)
+  // Reset da fase com R 
   if (Phaser.Input.Keyboard.JustDown(this.keyR)) {
     this.scene.restart({ level: this.level, lives: 3 });
     return;
   }
 
-  // Morte: caiu fora do mapa (só dispara uma vez)
+  // Morte: caiu fora do mapa 
   if (!this.deathTriggered && player.y > config.height + 150) {
     this.deathTriggered = true;
     this.lives--;
@@ -687,7 +672,6 @@ function update(time, delta) {
       player.y
     );
 
-    // Se player estiver perto → atacar
     if (distance < 150 && !slime.isAttacking) {
       slime.isAttacking = true;
       slime.play("slime_attack_anim");
@@ -814,14 +798,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
-    // ===== PULO (BUFFER + COYOTE) =====
     if (this.jumpBufferTimer > 0 && this.coyoteTimer > 0) {
       this.jumpBufferTimer = 0;
       this.coyoteTimer = 0;
       this.setState(PlayerState.JUMP);
     }
 
-    // ===== QUEDA =====
     if (!onGround && this.body.velocity.y > 0) {
       if (this.state !== PlayerState.FALL_LOOP) {
         this.setState(PlayerState.FALL);
